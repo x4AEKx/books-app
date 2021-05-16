@@ -5,18 +5,24 @@ import {bookType} from "./type/book";
 
 function App() {
 		const [inputValue, setInputValue] = useState("")
+
 		const [books, setBooks] = useState<Array<bookType>>([])
 
 		const getBooks = async (value: string) => {
 				const {data} = await axios.get(`https://openlibrary.org/search.json?title=${value}`)
-				setBooks(data.docs)
+				return data.docs
 		}
 
 		useEffect(() => {
-				setTimeout(async () => {
-						getBooks(inputValue)
+
+				const timeout = setTimeout(async () => {
+						const data = await getBooks(inputValue)
+						setBooks(data)
 				}, 1000)
 
+				return () => {
+						clearTimeout(timeout)
+				}
 		}, [inputValue])
 
 		console.log(books)
@@ -39,7 +45,7 @@ function App() {
 								marginTop: "10px"
 						}}>
 								{books.map(book => (
-												<div style={{
+												<div key={book.key} style={{
 														display: "flex",
 														flexDirection: "column",
 														alignItems: "center",
@@ -47,105 +53,24 @@ function App() {
 														width: "33.3333%",
 														outline: "1px solid black"
 												}}>
-														<div style={{
-																width: "100px",
-																height: "100px",
+														{book.cover_i ? <div style={{
+																width: "100%",
+																height: "280px",
+																marginTop: "10px",
+																background: `url(https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg) center / contain no-repeat`
+														}}></div> : <div style={{
+																width: "100%",
+																height: "280px",
+																marginTop: "10px",
 																backgroundColor: "black",
-																marginTop: "10px"
-														}}></div>
+																color: "white"
+														}}>No Image</div>}
 														<h3>{book.title}</h3>
 														<p>author: {book.author_name}</p>
 												</div>
 										)
 								)}
 						</div>
-						{/*<div style={{*/}
-						{/*		display: "flex",*/}
-						{/*		justifyContent: "space-around",*/}
-						{/*		alignItems: "center",*/}
-						{/*		flexWrap: "wrap",*/}
-						{/*		marginTop: "10px"*/}
-						{/*}}>*/}
-						{/*		<div style={{*/}
-						{/*				display: "flex",*/}
-						{/*				flexDirection: "column",*/}
-						{/*				alignItems: "center",*/}
-						{/*				width: "33.3333%",*/}
-						{/*				outline: "1px solid black"*/}
-						{/*		}}>*/}
-						{/*				<div style={{width: "100px", height: "100px", backgroundColor: "black", marginTop: "10px"}}></div>*/}
-						{/*				<h3>book name</h3>*/}
-						{/*				<p>book`s author</p>*/}
-						{/*		</div>*/}
-						{/*		<div style={{*/}
-						{/*				display: "flex",*/}
-						{/*				flexDirection: "column",*/}
-						{/*				alignItems: "center",*/}
-						{/*				width: "33.3333%",*/}
-						{/*				outline: "1px solid black"*/}
-						{/*		}}>*/}
-						{/*				<div style={{width: "100px", height: "100px", backgroundColor: "black", marginTop: "10px"}}></div>*/}
-						{/*				<h3>book name</h3>*/}
-						{/*				<p>book`s author</p>*/}
-						{/*		</div>*/}
-						{/*		<div style={{*/}
-						{/*				display: "flex",*/}
-						{/*				flexDirection: "column",*/}
-						{/*				alignItems: "center",*/}
-						{/*				width: "33.3333%",*/}
-						{/*				outline: "1px solid black"*/}
-						{/*		}}>*/}
-						{/*				<div style={{width: "100px", height: "100px", backgroundColor: "black", marginTop: "10px"}}></div>*/}
-						{/*				<h3>book name</h3>*/}
-						{/*				<p>book`s author</p>*/}
-						{/*		</div>*/}
-						{/*		<div style={{*/}
-						{/*				display: "flex",*/}
-						{/*				flexDirection: "column",*/}
-						{/*				alignItems: "center",*/}
-						{/*				width: "33.3333%",*/}
-						{/*				outline: "1px solid black"*/}
-						{/*		}}>*/}
-						{/*				<div style={{width: "100px", height: "100px", backgroundColor: "black", marginTop: "10px"}}></div>*/}
-						{/*				<h3>book name</h3>*/}
-						{/*				<p>book`s author</p>*/}
-						{/*		</div>*/}
-						{/*		<div style={{*/}
-						{/*				display: "flex",*/}
-						{/*				flexDirection: "column",*/}
-						{/*				alignItems: "center",*/}
-						{/*				width: "33.3333%",*/}
-						{/*				outline: "1px solid black"*/}
-						{/*		}}>*/}
-						{/*				<div style={{width: "100px", height: "100px", backgroundColor: "black", marginTop: "10px"}}></div>*/}
-						{/*				<h3>book name</h3>*/}
-						{/*				<p>book`s author</p>*/}
-						{/*		</div>*/}
-						{/*		<div style={{*/}
-						{/*				display: "flex",*/}
-						{/*				flexDirection: "column",*/}
-						{/*				alignItems: "center",*/}
-						{/*				width: "33.3333%",*/}
-						{/*				outline: "1px solid black"*/}
-						{/*		}}>*/}
-						{/*				<div style={{width: "100px", height: "100px", backgroundColor: "black", marginTop: "10px"}}></div>*/}
-						{/*				<h3>book name</h3>*/}
-						{/*				<p>book`s author</p>*/}
-						{/*		</div>*/}
-						{/*		<div style={{*/}
-						{/*				display: "flex",*/}
-						{/*				flexDirection: "column",*/}
-						{/*				alignItems: "center",*/}
-						{/*				width: "33.3333%",*/}
-						{/*				outline: "1px solid black"*/}
-						{/*		}}>*/}
-						{/*				<div style={{width: "100px", height: "100px", backgroundColor: "black", marginTop: "10px"}}></div>*/}
-						{/*				<h3>book name</h3>*/}
-						{/*				<p>book`s author</p>*/}
-						{/*		</div>*/}
-						{/*</div>*/}
-
-
 				</div>
 		);
 }
